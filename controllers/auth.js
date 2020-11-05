@@ -135,8 +135,55 @@ exports.emailVerifyController = (req, res) => {
 };
 
 exports.sendForgotPasswordEmail = (req, res) => {
+    const { email } = req.body;
+    User.findOne({ email }).exec((err, user) => {
+        if(err || !user){
+            return res.status(400).json({
+                error: 'Sorry, something went wrong!'
+            })
+        }
+        const forgotToken = jwt.sign({ user: user._id }, process.env.JWT_RESET_PASSWORD_SECRET, { expiresIn: '20m' });
+        user.resetPasswordLink = forgotToken;
+        user.save((err, saved) => {
+            if(err){
+                return res.status(400).json({
+                    error: 'Sorry, something went wrong!'
+                });
+            }
+            const forgotPasswordLink = `${process.env.CLIENT_URL}/user/password/forgot/${forgotToken}`;
+            const html = `
+                <p>Looks like you forgot your password </p>
+                <p>Please click on the link below to reset your password </p>
+                <a href="${forgotPasswordLink}" target="_blank">Reset Password</a>
+                </br>
+                <p>If you didn't generated this link, no need to take any action!</p>
+                <p>.</p>
+                <p>.</p>
+                <p> Happy Shopping!, Watches - ECOM </p>
 
+            `;
+            sendEmail(user.email, 'Watches ECOM - Password Reset Link', html)
+                .then(result => {
+                    console.log(result);
+                    if(result.message === 'success'){
+                        return res.status(200).json({
+                            message: 'Reset Password link is sent, Please check your inbox!'
+                        });
+                    }
+                    return res.status(200).json({
+                        error: 'Something went wrong, CORRECTLY!'
+                    })
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.status(400).json({
+                        error: 'Could\'t send mail!'
+                    });
+                })
+        })
+    })
 };
+
 exports.resetUserPassword = (req, res) => {
 
 };
