@@ -135,6 +135,12 @@ exports.emailVerifyController = (req, res) => {
 };
 
 exports.sendForgotPasswordEmail = (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({
+            error: errors.array()[0]["msg"]
+        });
+    }
     const { email } = req.body;
     User.findOne({ email }).exec((err, user) => {
         if(err || !user){
@@ -185,7 +191,50 @@ exports.sendForgotPasswordEmail = (req, res) => {
 };
 
 exports.resetUserPassword = (req, res) => {
-
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({
+            error: errors.array()[0]["msg"]
+        });
+    }
+    const { newPassword, token } = req.body;
+    if(!token){
+        return res.status(400).json({
+            error: 'Missing token!'
+        });
+    }
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET);
+        User.findById(decodedToken.user).exec((err, user) => {
+            if(err || !user){
+                return res.status(400).json({
+                    error: 'Sorry, something went wrong!'
+                });
+            }
+            if(user.resetPasswordLink !== token){
+                return res.status(400).json({
+                    error: 'Sorry, this is one time password reset link!'
+                });
+            }
+            user.password = newPassword;
+            user.resetPasswordLink = '';
+            user.save((err, saved) => {
+                if(err){
+                    return res.status(400).json({
+                        error: 'Sorry, something went wrong!'
+                    });
+                }
+                return res.status(200).json({
+                    message: 'Password reset successfully!'
+                });
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({
+            error: 'Invalid or Expired token!'
+        });
+    }
 };
 
 // MIDDLEWARES
