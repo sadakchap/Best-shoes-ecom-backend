@@ -31,6 +31,14 @@ const userSchema = new mongoose.Schema({
     purchase: {
         type: Array,
         default: []
+    },
+    is_verified: {
+        type: Boolean,
+        default: false
+    },
+    resetPasswordLink: {
+        type: String,
+        default: ''
     }
 }, { timestamps: true });
 

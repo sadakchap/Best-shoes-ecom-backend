@@ -1,10 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const { connectDB } = require('./db');
 const app = express();
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 
 // import Routes
+const authRoutes = require('./routes/auth');
 
 // USE MIDDLEWARES
 app.use(cookieParser());
@@ -17,6 +20,7 @@ if(process.env.NODE_ENV === 'development'){
 }
 
 // use routes
+app.use('/api', authRoutes);
 
 app.use((req, res) => {
     return res.status(404).json({
