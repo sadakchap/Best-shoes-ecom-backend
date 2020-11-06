@@ -8,6 +8,10 @@ const cors = require('cors');
 
 // import Routes
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
+const productRoutes = require('./routes/product');
+const categoryRoutes = require('./routes/category');
+const orderRoutes = require('./routes/order');
 
 // USE MIDDLEWARES
 app.use(cookieParser());
@@ -21,6 +25,10 @@ if(process.env.NODE_ENV === 'development'){
 
 // use routes
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
+app.use('/api', productRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', orderRoutes);
 
 app.use((req, res) => {
     return res.status(404).json({
