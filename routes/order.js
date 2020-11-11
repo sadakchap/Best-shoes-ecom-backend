@@ -1,6 +1,6 @@
 const express = require('express');
-const { isSignedIn } = require('../controllers/auth');
-const { getOrderById } = require('../controllers/order');
+const { isSignedIn, isAuthenticated, isAdmin } = require('../controllers/auth');
+const { getOrderById, createOrder, getAllOrders, getOrderStatus, updateOrderStatus } = require('../controllers/order');
 const { getUserById } = require('../controllers/user');
 const router = express.Router();
 

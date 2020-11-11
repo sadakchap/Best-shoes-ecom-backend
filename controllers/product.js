@@ -136,6 +136,7 @@ exports.getAllUniqueCategory = (req, res) => {
     })
 };
 
+// middlewares
 exports.photo = (req, res, next) => {
     if(req.product.photo.data){
         res.set("Content-Type", req.product.photo.contentType);
