@@ -1,4 +1,4 @@
-const { Category } = require('../models/category');
+const Category = require('../models/category');
 
 exports.getCategoryById = (req, res, next, id) => {
     Category.findById(id).exec((err, category) => {
@@ -75,6 +75,6 @@ exports.getAllCategories = (req, res) => {
                 error: 'No categories found in DB!'
             });
         }
-        return res.json({categories});
+        return res.json(categories);
     })
 };
