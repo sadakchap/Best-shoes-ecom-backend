@@ -28,10 +28,7 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    photo: {
-        data: Buffer,
-        contentType: String
-    }
+    photo_url: String
 }, { timestamps: true });
 
 module.exports = Product = mongoose.model('Product', productSchema);
