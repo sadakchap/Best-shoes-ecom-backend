@@ -1,6 +1,7 @@
-const { Product } = require('../models/product');
+const Product = require('../models/product');
 const formiable = require('formidable');
 const _ = require('lodash');
+const fs = require('fs');
 
 //TODO: Saved product photos in firbase
 

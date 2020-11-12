@@ -241,7 +241,7 @@ exports.resetUserPassword = (req, res) => {
 exports.isSignedIn = expressJwt({ secret: process.env.JWT_AUTH_SECRET, algorithms: ['HS256'], userProperty: 'auth' });
 
 exports.isAuthenticated = (req, res, next) => {
-    if(req.auth && req.profile && req.auth._id == req.profile._id){
+    if(req.auth && req.profile && req.auth.user == req.profile._id){
         next();
     }else{
         return res.status(400).json({
