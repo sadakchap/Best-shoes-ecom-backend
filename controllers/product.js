@@ -2,6 +2,7 @@ const Product = require('../models/product');
 const formiable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
+const uploadImage = require('../helpers/uploadToStorage');
 
 //TODO: Saved product photos in firbase
 
@@ -44,7 +45,7 @@ exports.createProduct = (req, res) => {
     let form = formiable.IncomingForm();
     form.keepExtensions = true;
 
-    form.parse(req, (err, fields, file) => {
+    form.parse(req, async (err, fields, file) => {
         if(err){
             return res.status(400).json({
                 error: `problem with ${err.message}`
@@ -63,8 +64,13 @@ exports.createProduct = (req, res) => {
             if(file.photo.size > 3000000){
                 return res.status(400).json({ error: 'file size too big' });
             }
-            product.photo.data = fs.readFileSync(file.photo.path);
-            product.photo.contentType = file.photo.type;
+            const upload = await uploadImage(file.photo);
+            if(upload.error){
+                return res.status(500).json({
+                    error: upload.error
+                });
+            }
+            product.photo_url = upload.downloadURL;
         }
         product.save((err, savedProduct) => {
             if(err){
