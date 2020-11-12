@@ -31,7 +31,7 @@ exports.getAllProducts = (req, res) => {
         .populate('category')
         .sort([[sortBy, "asc"]])
         .limit(limit)
-        .exec((err, productd) => {
+        .exec((err, products) => {
             if(err || !products){
                 return res.status(400).json({
                     error: 'No products found!'
