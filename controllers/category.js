@@ -20,7 +20,13 @@ exports.createCategory = (req, res) => {
         });
     }
     Category.findOne({ name }).exec((err, category) => {
-        if(err || !category){
+        if(err){
+            console.log(err);
+            return res.status(400).json({
+                error: 'Sorry, something went wrong!'
+            });
+        }
+        if(category){
             return res.status(400).json({
                 error: 'Category name must be unique!'
             });
@@ -32,7 +38,7 @@ exports.createCategory = (req, res) => {
                     error: 'Sorry, something went wrong!'
                 });
             }
-            return res.json({ category: saved });
+            return res.json(saved);
         })
     })
 };
