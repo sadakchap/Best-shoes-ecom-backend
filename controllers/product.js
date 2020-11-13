@@ -23,13 +23,13 @@ exports.getProduct = (req, res) => {
 };
 
 exports.getAllProducts = (req, res) => {
-    const sortBy = req.query.sortBy ? req.query.sortBy: "_id";
-    const limit = req.query.limit ? req.query.limit : 8;
+    const sortBy = req.query.sortBy ? req.query.sortBy: "createdAt";
+    const limit = req.query.limit ? req.query.limit : 10;
 
     Product.find()
         .select('-photo')
         .populate('category')
-        .sort([[sortBy, "asc"]])
+        .sort([[sortBy, "desc"]])
         .limit(limit)
         .exec((err, products) => {
             if(err || !products){
