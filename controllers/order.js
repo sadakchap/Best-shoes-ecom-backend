@@ -16,15 +16,41 @@ exports.getOrderById = (req, res, next, id) => {
 
 exports.createOrder = (req, res) => {
     req.body.order.user = req.profile;
-    const order = new Order(req.body.order);
-    order.save((err, saved) => {
-        if(err || !saved){
+    const cartItems = req.body.order.products;
+    const items = [];
+    for (let idx = 0; idx < cartItems.length; idx++) {
+        const element = cartItems[idx];
+        items.push({
+            product: element._id,
+            name: element.name,
+            price: element.price,
+            quantity: element.count
+        });
+    }
+    req.body.order.products = items;
+    // check for existing transaction id
+    Order.findOne({ transaction_id: req.body.order.transaction_id }).exec((err, order) => {
+        if(err){
             return res.status(400).json({
                 error: 'sorry, somthing went wrong!'
             });
         }
-        return res.json(saved);
-    });
+        if(order){
+            return res.status(200).json({
+                message: 'We have already processed this Order!'
+            });
+        }
+        
+        order = new Order(req.body.order);
+        order.save((err, saved) => {
+            if(err || !saved){
+                return res.status(400).json({
+                    error: 'sorry, somthing went wrong!'
+                });
+            }
+            return res.json(saved);
+        });
+    })
 };
 
 exports.getAllOrders = (req, res) => {
