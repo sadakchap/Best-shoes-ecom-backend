@@ -12,6 +12,7 @@ const userRoutes = require('./routes/user');
 const productRoutes = require('./routes/product');
 const categoryRoutes = require('./routes/category');
 const orderRoutes = require('./routes/order');
+const paytmRoutes = require('./routes/paytmPayment');
 
 // USE MIDDLEWARES
 app.use(cookieParser());
@@ -29,6 +30,7 @@ app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', paytmRoutes);
 
 app.use((req, res) => {
     return res.status(404).json({
