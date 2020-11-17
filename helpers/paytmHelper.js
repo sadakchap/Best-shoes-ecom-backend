@@ -12,6 +12,7 @@ const getTxnToken = (orderId, userId, amount) => {
         "mid"           : MERCHANT_ID,
         "websiteName"   : "WEBSTAGING",
         "orderId"       : orderId,
+        "callbackUrl"   : "http://localhost:8000/api/payment/callback",
         "txnAmount"     : {
             "value"     : txnAmount,
             "currency"  : "INR",
@@ -26,25 +27,14 @@ const getTxnToken = (orderId, userId, amount) => {
             paytmParams.head = {
                 "signature"    : checksum
             };
-            console.log('generated checksum -> ', checksum);
+
             const url = `https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=${MERCHANT_ID}&orderId=${orderId}`;
             axios.post(url, paytmParams).then(response => {
-                console.log(response.data);
-                console.log(typeof response.data);
                 const data = response.data;
                 if(data.body.resultInfo.resultStatus === 'S'){
                     resolve({
                         orderId,
-                        checksum,
-                        userId,
-                        resultInfo: data.body.resultInfo,
-                        txnToken: data.body.txnToken,
-                        signature: data.head.signature,
-                        txnTimestamp: data.head.responseTimestamp,
-                        txnAmount: {
-                            value: txnAmount,
-                            currency: "INR",
-                        }
+                        txnToken: data.body.txnToken
                     })
                 }
                 resolve({
@@ -61,4 +51,4 @@ const getTxnToken = (orderId, userId, amount) => {
 
 // getTxnToken(`ORDER_ID${new Date().getTime()}`, "CUST_0001", 29).then(res => console.log(res));
 
-module.exports = getTxnToken;
+module.exports = { getTxnToken };
