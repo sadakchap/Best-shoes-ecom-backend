@@ -13,7 +13,7 @@ const orderItemSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-    product: [orderItemSchema],
+    products: [orderItemSchema],
     transaction_id: {},
     amount: Number,
     address: String,
