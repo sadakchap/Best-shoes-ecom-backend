@@ -25,7 +25,6 @@ exports.processPayment = (req, res) => {
         const paytmChecksumHash = fields.CHECKSUMHASH;
         delete fields["CHECKSUMHASH"];
         
-        console.log(fields);
         const isVerifySignature = PaytmChecksum.verifySignature(fields, process.env.PAYTM_MERCHANT_KEY, paytmChecksumHash);
         if (isVerifySignature) {
             console.log("Checksum Matched");
@@ -84,11 +83,3 @@ exports.processPayment = (req, res) => {
     })
     // validate checksum & make transaction
 };
-
-// {
-//   TXNID: '20201116111212800110168884902094069',
-//   TXNAMOUNT: '178.00',
-//   ORDERID: 'ORDER_ID_1605551100423',
-//   STATUS: 'TXN_SUCCESS',
-//   TXNDATE: '2020-11-16 23:55:03.0',
-// }
