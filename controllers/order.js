@@ -81,3 +81,27 @@ exports.updateOrderStatus = (req, res) => {
         }
     )
 };
+
+exports.getOrdersGroupedData = (req, res) => {
+    Order.aggregate([ 
+        { "$unwind": { "path": "$products", "preserveNullAndEmptyArrays": true } },
+        { $group: { 
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt"}} , 
+            sold: { 
+                $sum: "$products.quantity"
+            },
+            totalAmount: {
+                $sum: '$amount'
+            }
+        } },
+        { $limit: 8 },
+    ]).exec((err, data) => {
+        if(err){
+            console.log(err);
+            return res.status(500).json({
+                error: 'gol mal h sb gol mal h'
+            })
+        }
+        return res.status(200).json(data);
+    });
+};
