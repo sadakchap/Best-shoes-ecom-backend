@@ -1,10 +1,7 @@
 const Product = require('../models/product');
 const formiable = require('formidable');
 const _ = require('lodash');
-const fs = require('fs');
 const uploadImage = require('../helpers/uploadToStorage');
-
-//TODO: Saved product photos in firbase
 
 exports.getProductById = (req, res, next, id) => {
     Product.findById(id).exec((err, product) => {
@@ -38,6 +35,23 @@ exports.getAllProducts = (req, res) => {
             }
             return res.status(200).json(products);
         });
+};
+
+exports.filterProductByQuery = (req, res) => {
+    const serachText = req.query.q;
+    if(!serachText){
+        res.status(400).json({
+            message: 'Empty query!'
+        });
+    }
+    Product.find({'name' : new RegExp(serachText, 'i')}).exec((err, products) => {
+        if(err){
+            return res.status(400).json({
+                error: `problem with ${err.message}`
+            });
+        }
+        return res.status(200).json(products)
+    });
 };
 
 exports.createProduct = (req, res) => {
@@ -148,14 +162,6 @@ exports.getAllUniqueCategory = (req, res) => {
 };
 
 // middlewares
-exports.photo = (req, res, next) => {
-    if(req.product.photo.data){
-        res.set("Content-Type", req.product.photo.contentType);
-        return res.send(req.product.photo.data);
-    }
-    next();
-};
-
 exports.updateStock = (req, res, next) => {
     let myOperations = req.body.order.products.map(product => {
         return {
