@@ -27,7 +27,6 @@ exports.getAllProducts = (req, res) => {
     const limit = req.query.limit ? req.query.limit : 10;
 
     Product.find()
-        .select('-photo')
         .populate('category')
         .sort([[sortBy, "desc"]])
         .limit(limit)
@@ -155,4 +154,23 @@ exports.photo = (req, res, next) => {
         return res.send(req.product.photo.data);
     }
     next();
+};
+
+exports.updateStock = (req, res, next) => {
+    let myOperations = req.body.order.products.map(product => {
+        return {
+            updateOne: {
+                filter: { _id: product._id },
+                update: {$inc: {stock: -product.count, sold: +product.count} }
+            }
+        }
+    });
+
+    Product.bulkWrite(myOperations, (err, products) => {
+        if(err){
+            console.log(err.message);
+            return res.status(400).json({ error: 'Bulk operations failed!' });
+        }
+        next();
+    })
 };
