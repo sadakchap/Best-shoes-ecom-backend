@@ -66,7 +66,7 @@ exports.pushOrderInPurchaseList = (req, res, next) => {
         {_id: req.profile._id},
         {$push: {purchases}},
         {new: true},
-        (err, purchaseList) => {
+        (err, updatedUser) => {
             if(err){
                 return res.status(400).json({
                     error: 'Unable to save purchase list'

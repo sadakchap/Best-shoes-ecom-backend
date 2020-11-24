@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
         default: 0
     },
     salt: String,
-    purchase: {
+    purchases: {
         type: Array,
         default: []
     },
