@@ -12,7 +12,7 @@ const getTxnToken = (orderId, userId, amount) => {
         "mid"           : MERCHANT_ID,
         "websiteName"   : "WEBSTAGING",
         "orderId"       : orderId,
-        "callbackUrl"   : "http://localhost:8000/api/payment/callback",
+        "callbackUrl"   : `${process.env.API_URL}/api/payment/callback`,
         "txnAmount"     : {
             "value"     : txnAmount,
             "currency"  : "INR",
