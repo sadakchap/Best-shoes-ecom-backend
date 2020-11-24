@@ -49,6 +49,7 @@ exports.userPurchaseList = (req, res) => {
         })
 };
 
+// middleware
 exports.pushOrderInPurchaseList = (req, res, next) => {
     let purchases = [];
     req.body.order.products.forEach(prod => {
