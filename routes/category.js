@@ -13,8 +13,8 @@ router.get('/categories', getAllCategories);
 
 router.post('/category/create/:userId', isSignedIn, isAuthenticated, isAdmin, createCategory);
 
-router.put('/category/create/:userId/:categoryId', isSignedIn, isAuthenticated, isAdmin, updateCategory);
-router.delete('/category/create/:userId/:categoryId', isSignedIn, isAuthenticated, isAdmin, removeCategory);
+router.put('/category/:userId/:categoryId', isSignedIn, isAuthenticated, isAdmin, updateCategory);
+router.delete('/category/:userId/:categoryId', isSignedIn, isAuthenticated, isAdmin, removeCategory);
 
 
 module.exports = router;
