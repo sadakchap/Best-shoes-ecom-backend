@@ -94,7 +94,7 @@ exports.getOrdersGroupedData = (req, res) => {
                 $sum: '$amount'
             }
         } },
-        { $limit: 8 },
+        { $limit: 7 },
     ]).exec((err, data) => {
         if(err){
             console.log(err);
