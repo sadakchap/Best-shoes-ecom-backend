@@ -20,12 +20,13 @@ exports.getProduct = (req, res) => {
 };
 
 exports.getAllProducts = (req, res) => {
-    const sortBy = req.query.sortBy ? req.query.sortBy: "createdAt";
-    const limit = req.query.limit ? req.query.limit : 10;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 0;
 
     Product.find()
         .populate('category')
-        .sort([[sortBy, "desc"]])
+        .sort('-createdAt')
+        .skip(limit * (page-1))
         .limit(limit)
         .exec((err, products) => {
             if(err || !products){
