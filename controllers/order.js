@@ -54,15 +54,18 @@ exports.createOrder = (req, res) => {
 };
 
 exports.getAllOrders = (req, res) => {
-    Order.find().populate("user", "_id name").exec((err, orders) => {
-        if(err || !orders){
-            return res.status(400).json({
-                error: 'No orders found!'
-            });
-        }
+    Order.find()
+        .populate("user", "_id name")
+        .sort('-createdAt')
+        .exec((err, orders) => {
+            if(err || !orders){
+                return res.status(400).json({
+                    error: 'No orders found!'
+                });
+            }
 
-        return res.status(200).json(orders);
-    });
+            return res.status(200).json(orders);
+        });
 };
 
 exports.getOrderStatus = (req, res) => {
