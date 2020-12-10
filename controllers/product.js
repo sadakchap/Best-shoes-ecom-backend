@@ -20,14 +20,14 @@ exports.getProduct = (req, res) => {
 };
 
 exports.getAllProducts = (req, res) => {
-    // const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-    // const page = req.query.page ? parseInt(req.query.page) : 1;
-    // .skip(limit * (page - 1))
-    // .limit(limit)
-
+    const limit = req.query.limit ? parseInt(req.query.limit) : 9;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    
     Product.find()
         .populate('category')
         .sort('-createdAt')
+        .skip(limit * (page - 1))
+        .limit(limit)
         .exec((err, products) => {
             if(err || !products){
                 return res.status(400).json({
